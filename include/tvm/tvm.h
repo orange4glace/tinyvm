@@ -90,7 +90,7 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 				*instr_idx = (!(vm->mem->FLAGS & 0x2))
 					? *args0 - 1 : *instr_idx;
 				break;
-/* prn   */	case 0x1F: printf("%i\n", *args0);
+/* prn   */	case 0x1F: printf("%i\n", *args0); break;
 /* sete  */	case 0x20:
 				*args0 = (vm->mem->FLAGS & 0x1); break;
 /* setne */	case 0x21:

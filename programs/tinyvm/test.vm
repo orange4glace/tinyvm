@@ -1,4 +1,25 @@
 mov ebp esp
-cmp 1 3
-setle eax
-prn eax
+push 0
+push 3
+mov -1(ebp) -2(ebp)
+push 0
+push 57
+mov -3(ebp) -4(ebp)
+push ebp
+mov ebp esp
+loop_start:
+push 0
+cmp 4(ebp) 2(ebp)
+setl -1(ebp) 2(ebp)
+cmp -1(ebp) 0
+je loop_end
+push 3
+push 0
+mov -3(ebp) 4(ebp)
+mul -3(ebp) -2(ebp)
+mov 4(ebp) -3(ebp)
+prn 4(ebp)
+add esp 12
+jmp loop_start
+loop_end:
+pop ebp
