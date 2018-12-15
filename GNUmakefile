@@ -1,6 +1,6 @@
 CC = clang
 
-CFLAGS = -Wall -pipe -Iinclude/ -std=gnu11 -D_CRT_SECURE_NO_WARNINGS
+CFLAGS = -m32 -Wall -pipe -Iinclude/ -std=gnu11 -D_CRT_SECURE_NO_WARNINGS
 OFLAGS = 
 LFLAGS = $(CFLAGS) -Llib/
 PEDANTIC_FLAGS = -Werror -pedantic -pedantic-errors

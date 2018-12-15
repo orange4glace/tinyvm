@@ -22,6 +22,7 @@ const char *tvm_register_map[] = {
 
 
 static int *token_to_register(const char *token, struct tvm_mem *mem);
+static int *token_to_register_addr(const char *token, struct tvm_mem *mem);
 static int instr_to_opcode(const char *instr);
 
 int tvm_parse_labels(struct tvm_ctx *vm, const char ***tokens)
@@ -84,7 +85,11 @@ int tvm_parse_labels(struct tvm_ctx *vm, const char ***tokens)
 static int **tvm_parse_args(
 	struct tvm_ctx *vm, const char **instr_tokens, int *instr_place)
 {
-	int **args = calloc(sizeof(int *), MAX_ARGS);
+	int **args = calloc(sizeof(int *), 8);
+  args[2] = tvm_add_value(vm, 0);
+  args[3] = tvm_add_value(vm, 0);
+  args[4] = tvm_add_value(vm, 0);
+  args[5] = tvm_add_value(vm, 0);
 
 	for (int i = 0; i < MAX_ARGS; ++i) {
 		if (!instr_tokens[*instr_place+1 + i]
@@ -119,6 +124,22 @@ static int **tvm_parse_args(
 				continue;
 			}
 		}
+
+    {
+      char *start_symbol = strchr(
+        instr_tokens[*instr_place+1 + i], '(');
+      if (start_symbol) {
+        *start_symbol = 0;
+        char *end_symbol = strchr(start_symbol + 1, ')');
+        *end_symbol = 0;
+        int *regp = token_to_register_addr(start_symbol + 1, vm->mem);
+        int offset = tvm_parse_value(instr_tokens[*instr_place+1 + i]);
+        args[i] = regp;
+        args[i + 2] = tvm_add_value(vm, offset);
+        args[i + 4] = tvm_add_value(vm, 1);
+        continue;
+      }
+    }
 
 		/* Check if the argument is a label */
 		int addr = tvm_htab_find(
@@ -236,6 +257,17 @@ int *token_to_register(const char *token, struct tvm_mem *mem)
 	for (int i = 0; tvm_register_map[i]; i++) {
 		if (strcmp(token, tvm_register_map[i]) == 0)
 			return &mem->registers[i].i32;
+	}
+
+	return NULL;
+}
+
+int *token_to_register_addr(const char *token, struct tvm_mem *mem)
+{
+	for (int i = 0; tvm_register_map[i]; i++) {
+		if (strcmp(token, tvm_register_map[i]) == 0) {
+			return &mem->registers[i].i32;
+    }
 	}
 
 	return NULL;
