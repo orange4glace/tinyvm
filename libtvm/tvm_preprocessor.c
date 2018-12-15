@@ -2,7 +2,7 @@
 #include <tvm/tvm_file.h>
 #include <tvm/tvm_tokens.h>
 
-#include <unistd.h>
+#include <tvm/unistd.h>
 #include <string.h>
 
 static int process_includes(

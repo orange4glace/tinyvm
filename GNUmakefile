@@ -1,6 +1,6 @@
 CC = clang
 
-CFLAGS = -Wall -pipe -Iinclude/ -std=gnu11
+CFLAGS = -Wall -pipe -Iinclude/ -std=gnu11 -D_CRT_SECURE_NO_WARNINGS
 OFLAGS = 
 LFLAGS = $(CFLAGS) -Llib/
 PEDANTIC_FLAGS = -Werror -pedantic -pedantic-errors
@@ -56,7 +56,7 @@ uninstall:
 	rm -rf /usr/lib/libtvm*
 
 libtvm: $(LIBTVM_OBJECTS)
-	ar rcs $(LIB_DIR)/libtvm.a $(LIBTVM_OBJECTS)
+	llvm-lib $(LIBTVM_OBJECTS) /out:$(LIB_DIR)/tvm.lib
 
 submodules:
 	git submodule update --init
@@ -66,10 +66,10 @@ mlibc: submodules
 
 # Build the TVM interpreter
 tvmi: libtvm $(FREESTANDING_DEPS)
-	$(CC) src/tvmi.c -ltvm $(LFLAGS) -o $(BIN_DIR)/tvmi
+	$(CC) src/tvmi.c -ltvm $(LFLAGS) -o $(BIN_DIR)/tvmi.exe
 
 tdb: libtvm $(TDB_OBJECTS) $(FREESTANDING_DEPS)
-	$(CC) $(TDB_OBJECTS) -ltvm $(LFLAGS) -o $(BIN_DIR)/tdb
+	$(CC) $(TDB_OBJECTS) -ltvm $(LFLAGS) -o $(BIN_DIR)/tdb.exe
 
 profile: tvmi
 	time $(PROFILER) $(BIN_DIR)/tvmi $(PROF_ARGS)

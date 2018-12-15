@@ -4,4 +4,4 @@ valgrind*
 cachegrind*
 callgrind*
 core*
-
+*.exe
