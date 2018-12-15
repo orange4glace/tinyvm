@@ -91,6 +91,18 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 					? *args0 - 1 : *instr_idx;
 				break;
 /* prn   */	case 0x1F: printf("%i\n", *args0);
+/* sete  */	case 0x20:
+				*args0 = (vm->mem->FLAGS & 0x1); break;
+/* setne */	case 0x21:
+				*args0 = (!(vm->mem->FLAGS & 0x1)); break;
+/* setg  */	case 0x22:
+				*args0 = (vm->mem->FLAGS & 0x2); break;
+/* setge */	case 0x23:
+				*args0 = (vm->mem->FLAGS & 0x3); break;
+/* setl  */	case 0x24:
+				*args0 = (!(vm->mem->FLAGS & 0x3)); break;
+/* setle */	case 0x25:
+				*args0 = (!(vm->mem->FLAGS & 0x2)); break;
 	};
 }
 

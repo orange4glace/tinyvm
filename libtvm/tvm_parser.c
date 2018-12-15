@@ -10,7 +10,7 @@ const char *tvm_opcode_map[] = {
 	"not", "xor", "or", "and", "shl", "shr",
 	"cmp", "jmp", "call", "ret",
 	"je", "jne", "jg", "jge", "jl", "jle",
-	"prn", 0
+	"prn", "sete", "setne", "setg", "setge", "setl", "setle", 0
 };
 
 const char *tvm_register_map[] = {
