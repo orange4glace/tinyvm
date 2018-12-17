@@ -1,25 +1,16 @@
 mov ebp esp
-push 0
-push 3
-mov -1(ebp) -2(ebp)
-push 0
-push 57
-mov -3(ebp) -4(ebp)
-push ebp
+main:
+push ebp # save base pointer 0
 mov ebp esp
-loop_start:
+push 5
+push 0 # start array size 5
 push 0
-cmp 4(ebp) 2(ebp)
-setl -1(ebp) 2(ebp)
-cmp -1(ebp) 0
-je loop_end
+push 0
+push 0
+push 0
+push 2
 push 3
-push 0
-mov -3(ebp) 4(ebp)
-mul -3(ebp) -2(ebp)
-mov 4(ebp) -3(ebp)
-prn 4(ebp)
-add esp 12
-jmp loop_start
-loop_end:
-pop ebp
+mov esi -2
+sub esi -8(ebp)
+mov esi(ebp) -7(ebp)
+prn -5(ebp)

@@ -126,17 +126,30 @@ static int **tvm_parse_args(
 		}
 
     {
+		  /* Check indirect addressing mode */
       char *start_symbol = strchr(
         instr_tokens[*instr_place+1 + i], '(');
       if (start_symbol) {
         *start_symbol = 0;
         char *end_symbol = strchr(start_symbol + 1, ')');
         *end_symbol = 0;
+
         int *regp = token_to_register_addr(start_symbol + 1, vm->mem);
-        int offset = tvm_parse_value(instr_tokens[*instr_place+1 + i]);
+
+        // set adressing mode
         args[i] = regp;
-        args[i + 2] = tvm_add_value(vm, offset);
         args[i + 4] = tvm_add_value(vm, 1);
+
+        int *index_regp = token_to_register(
+          instr_tokens[*instr_place+1 + i], vm->mem);
+
+        if (index_regp) {
+          args[i + 2] = index_regp;
+          continue;
+        }
+
+        int offset = tvm_parse_value(instr_tokens[*instr_place+1 + i]);
+        args[i + 2] = tvm_add_value(vm, offset);
         continue;
       }
     }
