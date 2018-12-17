@@ -32,10 +32,17 @@ struct tvm_mem {
 	void *mem_space;
 	int mem_space_size;
 
+  int heap_size;
+
 	union tvm_reg_u *registers;
 };
 
 struct tvm_mem *tvm_mem_create(size_t size);
 void tvm_mem_destroy(struct tvm_mem *mem);
+
+// allocate memory and return address
+static inline int32_t tvm_mem_malloc(struct tvm_mem *mem, size_t size) {
+  return mem->heap_size++;
+}
 
 #endif

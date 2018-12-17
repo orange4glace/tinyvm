@@ -14,6 +14,7 @@ struct tvm_mem *tvm_mem_create(size_t size)
 
 	m->mem_space_size = size;
 	m->mem_space = (int *)calloc(size, 1);
+  m->heap_size = 0;
 
 	return m;
 }

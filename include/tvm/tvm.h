@@ -23,12 +23,14 @@ int tvm_vm_interpret(struct tvm_ctx *vm, char *filename);
 void tvm_vm_run(struct tvm_ctx *vm);
 
 
-#define args0 (*args[4] == 0 ? \
-  (args[0] + *args[2]) : \
-  ((int32_t*)(size_t)(*args[0]) + *args[2]))
-#define args1 (*args[5] == 0 ? \
-  (args[1] + *args[3]) : \
-  ((int32_t*)(size_t)(*args[1]) + *args[3]))
+#define args_rule(INDEX) (*args[INDEX + 4] == 0 ? \
+  (args[INDEX] + *args[INDEX + 2]) : \
+  *args[INDEX + 4] == 1 ? \
+  ((int32_t*)(size_t)(*args[INDEX]) + *args[INDEX + 2]) : \
+  &((int *)vm->mem->mem_space)[*args[INDEX]])
+
+#define args0 args_rule(0)
+#define args1 args_rule(1)
 
 // #define args0 (args[0] + *args[2])
 // #define args1 (args[1] + *args[3])
@@ -103,6 +105,9 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 				*args0 = (!(vm->mem->FLAGS & 0x3)); break;
 /* setle */	case 0x25:
 				*args0 = (!(vm->mem->FLAGS & 0x2)); break;
+/* malloc */	case 0x26:
+				vm->mem->registers[0x0].i32 /* eax */ =
+            tvm_mem_malloc(vm->mem, 1); break;
 	};
 }
 

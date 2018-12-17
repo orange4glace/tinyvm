@@ -10,7 +10,8 @@ const char *tvm_opcode_map[] = {
 	"not", "xor", "or", "and", "shl", "shr",
 	"cmp", "jmp", "call", "ret",
 	"je", "jne", "jg", "jge", "jl", "jle",
-	"prn", "sete", "setne", "setg", "setge", "setl", "setle", 0
+	"prn", "sete", "setne", "setg", "setge", "setl", "setle",
+  "malloc", 0
 };
 
 const char *tvm_register_map[] = {
@@ -86,8 +87,13 @@ static int **tvm_parse_args(
 	struct tvm_ctx *vm, const char **instr_tokens, int *instr_place)
 {
 	int **args = calloc(sizeof(int *), 8);
+  // 2 ~ 3 : offset value on indirect addressing mode
   args[2] = tvm_add_value(vm, 0);
   args[3] = tvm_add_value(vm, 0);
+  // 4 ~ 5 : addressing mode
+  // 0 : direct addressing
+  // 1 : indirect addressing
+  // 2 : indirect direct memory addressing
   args[4] = tvm_add_value(vm, 0);
   args[5] = tvm_add_value(vm, 0);
 
@@ -117,6 +123,13 @@ static int **tvm_parse_args(
 
 			if (end_symbol) {
 				*end_symbol = 0;
+        int *regp = token_to_register_addr(instr_tokens[
+						*instr_place+1 + i] + 1, vm->mem);
+        if (regp) {
+          args[i] = regp;
+          args[i + 4] = tvm_add_value(vm, 2);
+          continue;
+        }
 				args[i] = &((int *)vm->mem->mem_space)[
 					tvm_parse_value(instr_tokens[
 						*instr_place+1 + i] + 1)];
