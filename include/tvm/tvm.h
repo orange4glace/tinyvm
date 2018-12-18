@@ -105,9 +105,12 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 				*args0 = (!(vm->mem->FLAGS & 0x3)); break;
 /* setle */	case 0x25:
 				*args0 = (!(vm->mem->FLAGS & 0x2)); break;
-/* malloc */	case 0x26:
+/* malloc */case 0x26:
 				vm->mem->registers[0x0].i32 /* eax */ =
             tvm_mem_malloc(vm->mem, 1); break;
+/* mem */	  case 0x27:
+				*args0 = (*args1 - (int32_t)(vm->mem->mem_space)) / 4;
+        break;
 	};
 }
 

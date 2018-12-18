@@ -1,23 +1,34 @@
 mov ebp esp
-malloc
-malloc
-malloc
-malloc
-malloc
+
 main:
 push ebp # save base pointer 0
 mov ebp esp
-push 0 # heap addr
-malloc
-push eax # heap addr
-mov -1(ebp) -2(ebp)
-push 0 # 53
-mov (esp) 53
-mov esi -1(ebp)
-prn -1(ebp)
-mov [esi] -3(ebp)
-push 0 # b
-mov esi -1(ebp)
-mov -4(ebp) [esi]
-prn -4(ebp)
-prn [5]
+push 0
+mov (esp) 5
+push 0 # start array size 5
+push 0
+push 0
+push 0
+push 0
+push 0
+mov (esp) 2342
+push 0
+mov (esp) 4
+mem esi ebp
+add esi 2
+mov ecx esi # get subscript base address
+mov edx -8(ebp)
+sub ecx edx # add subscript offset
+push ecx # subscript element
+mov esi -9(ebp)
+mov [esi] -7(ebp)
+push 0
+mov (esp) 4
+mem esi ebp
+add esi 2
+mov ecx esi # get subscript base address
+mov edx -10(ebp)
+sub ecx edx # add subscript offset
+push ecx # subscript element
+mov esi -11(ebp)
+prn [esi]

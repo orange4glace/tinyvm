@@ -11,7 +11,7 @@ const char *tvm_opcode_map[] = {
 	"cmp", "jmp", "call", "ret",
 	"je", "jne", "jg", "jge", "jl", "jle",
 	"prn", "sete", "setne", "setg", "setge", "setl", "setle",
-  "malloc", 0
+  "malloc", "mem", 0
 };
 
 const char *tvm_register_map[] = {
