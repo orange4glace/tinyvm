@@ -11,7 +11,7 @@ const char *tvm_opcode_map[] = {
 	"cmp", "jmp", "call", "ret",
 	"je", "jne", "jg", "jge", "jl", "jle",
 	"prn", "sete", "setne", "setg", "setge", "setl", "setle",
-  "malloc", "mem", 0
+  "malloc", "mem", "thread", "start", "join", 0
 };
 
 const char *tvm_register_map[] = {
@@ -22,8 +22,8 @@ const char *tvm_register_map[] = {
 	"r12", "r13", "r14", "r15", 0};
 
 
-static int *token_to_register(const char *token, struct tvm_mem *mem);
-static int *token_to_register_addr(const char *token, struct tvm_mem *mem);
+static int *token_to_register(struct tvm_ctx *vm, const char *token, struct tvm_mem *mem);
+static int *token_to_register_addr(struct tvm_ctx *vm, const char *token, struct tvm_mem *mem);
 static int instr_to_opcode(const char *instr);
 
 int tvm_parse_labels(struct tvm_ctx *vm, const char ***tokens)
@@ -86,7 +86,7 @@ int tvm_parse_labels(struct tvm_ctx *vm, const char ***tokens)
 static int **tvm_parse_args(
 	struct tvm_ctx *vm, const char **instr_tokens, int *instr_place)
 {
-	int **args = calloc(sizeof(int *), 8);
+	int **args = calloc(sizeof(int *), 10);
   // 2 ~ 3 : offset value on indirect addressing mode
   args[2] = tvm_add_value(vm, 0);
   args[3] = tvm_add_value(vm, 0);
@@ -97,6 +97,16 @@ static int **tvm_parse_args(
   // 3 : indirect memory addressing
   args[4] = tvm_add_value(vm, 0);
   args[5] = tvm_add_value(vm, 0);
+  // 6 ~ 7 : register flag
+  // 0 : value
+  // 1 : register
+  args[6] = tvm_add_value(vm, 0);
+  args[7] = tvm_add_value(vm, 0);
+  // 8 ~ 9 : offset register flag
+  // 0 : value
+  // 1 : register
+  args[8] = tvm_add_value(vm, 0);
+  args[9] = tvm_add_value(vm, 0);
 
 	for (int i = 0; i < MAX_ARGS; ++i) {
 		if (!instr_tokens[*instr_place+1 + i]
@@ -109,11 +119,12 @@ static int **tvm_parse_args(
 			*newline = 0;
 
 		/* Check to see if the token specifies a register */
-		int *regp = token_to_register(
+		int *regp = token_to_register(vm,
 			instr_tokens[*instr_place+1 + i], vm->mem);
 
 		if (regp) {
 			args[i] = regp;
+      args[i + 6] = tvm_add_value(vm, 1);
 			continue;
 		}
 
@@ -124,11 +135,12 @@ static int **tvm_parse_args(
 
 			if (end_symbol) {
 				*end_symbol = 0;
-        int *regp = token_to_register_addr(instr_tokens[
+        int *regp = token_to_register_addr(vm, instr_tokens[
 						*instr_place+1 + i] + 1, vm->mem);
         if (regp) {
           args[i] = regp;
           args[i + 4] = tvm_add_value(vm, 2);
+          args[i + 6] = tvm_add_value(vm, 1);
           continue;
         }
 				args[i] = &((int *)vm->mem->mem_space)[
@@ -148,13 +160,14 @@ static int **tvm_parse_args(
         char *end_symbol = strchr(start_symbol + 1, ')');
         *end_symbol = 0;
 
-        int *regp = token_to_register_addr(start_symbol + 1, vm->mem);
+        int *regp = token_to_register_addr(vm, start_symbol + 1, vm->mem);
 
         // set adressing mode
         args[i] = regp;
         args[i + 4] = tvm_add_value(vm, 1);
+        args[i + 6] = tvm_add_value(vm, 1);
 
-        int *index_regp = token_to_register(
+        int *index_regp = token_to_register(vm, 
           instr_tokens[*instr_place+1 + i], vm->mem);
 
         if (index_regp) {
@@ -177,17 +190,19 @@ static int **tvm_parse_args(
         char *end_symbol = strchr(start_symbol + 1, '}');
         *end_symbol = 0;
 
-        int *regp = token_to_register_addr(start_symbol + 1, vm->mem);
+        int *regp = token_to_register_addr(vm, start_symbol + 1, vm->mem);
 
         // set adressing mode
         args[i] = regp;
         args[i + 4] = tvm_add_value(vm, 3);
+        args[i + 6] = tvm_add_value(vm, 1);
 
-        int *index_regp = token_to_register(
+        int *index_regp = token_to_register(vm,
           instr_tokens[*instr_place+1 + i], vm->mem);
 
         if (index_regp) {
           args[i + 2] = index_regp;
+          args[i + 8] = tvm_add_value(vm, 1);
           continue;
         }
 
@@ -308,21 +323,21 @@ int tvm_parse_program(
 	return 0;
 }
 
-int *token_to_register(const char *token, struct tvm_mem *mem)
+int *token_to_register(struct tvm_ctx *vm, const char *token, struct tvm_mem *mem)
 {
 	for (int i = 0; tvm_register_map[i]; i++) {
 		if (strcmp(token, tvm_register_map[i]) == 0)
-			return &mem->registers[i].i32;
+			return tvm_add_value(vm, i);
 	}
 
 	return NULL;
 }
 
-int *token_to_register_addr(const char *token, struct tvm_mem *mem)
+int *token_to_register_addr(struct tvm_ctx *vm, const char *token, struct tvm_mem *mem)
 {
 	for (int i = 0; tvm_register_map[i]; i++) {
 		if (strcmp(token, tvm_register_map[i]) == 0) {
-			return &mem->registers[i].i32;
+			return tvm_add_value(vm, i);
     }
 	}
 

@@ -1,8 +1,9 @@
 CC = clang
 
-CFLAGS = -m32 -Wall -pipe -Iinclude/ -std=gnu11 -D_CRT_SECURE_NO_WARNINGS
+CFLAGS = -m32 -Wall -pipe -Iinclude/ -Ipthread/include/ \
+	-std=gnu11 -D_CRT_SECURE_NO_WARNINGS
 OFLAGS = 
-LFLAGS = $(CFLAGS) -Llib/
+LFLAGS = $(CFLAGS) -Llib/ -Lpthread/lib/x86/
 PEDANTIC_FLAGS = -Werror -pedantic -pedantic-errors
 FREESTANDING_FLAGS = -nostdlib -nodefaultlibs -fno-builtin -Imlibc/include
 
@@ -43,7 +44,7 @@ endif
 
 CFLAGS += $(OPTIMIZATION)
 
-all: libtvm tvmi tdb
+all: libtvm tvmi
 
 install: libtvm tvmi
 	cp -f $(BIN_DIR)/tvmi $(INSTALL_PREFIX)/bin/
@@ -66,7 +67,8 @@ mlibc: submodules
 
 # Build the TVM interpreter
 tvmi: libtvm $(FREESTANDING_DEPS)
-	$(CC) src/tvmi.c -ltvm $(LFLAGS) -o $(BIN_DIR)/tvmi.exe
+	$(CC) src/tvmi.c -ltvm -lpthreadVC2 -lpthreadVCE2 -lpthreadVSE2 \
+  $(LFLAGS) -o $(BIN_DIR)/tvmi.exe
 
 tdb: libtvm $(TDB_OBJECTS) $(FREESTANDING_DEPS)
 	$(CC) $(TDB_OBJECTS) -ltvm $(LFLAGS) -o $(BIN_DIR)/tdb.exe
@@ -78,7 +80,7 @@ profile: tvmi
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BIN_DIR)/* $(LIB_DIR)/* libtvm/*.o tdb/*.o gmon.out *.save *.o core* vgcore*
+	rm -rf $(BIN_DIR)/*.exe $(LIB_DIR)/* libtvm/*.o tdb/*.o gmon.out *.save *.o core* vgcore*
 
 rebuild: clean all
 

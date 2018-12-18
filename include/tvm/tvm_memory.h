@@ -1,6 +1,8 @@
 #ifndef TVM_MEMORY_H_
 #define TVM_MEMORY_H_
 
+#define HAVE_STRUCT_TIMESPEC
+#include <pthread.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -26,19 +28,18 @@ struct tvm_mem {
 	 *
 	 */
 
-	int FLAGS;
-	int remainder;
-
 	void *mem_space;
 	int mem_space_size;
+  size_t total_stack_size;
+
+  pthread_mutex_t mutex;
 
   int heap_size;
-
-	union tvm_reg_u *registers;
 };
 
 struct tvm_mem *tvm_mem_create(size_t size);
 void tvm_mem_destroy(struct tvm_mem *mem);
+int32_t* tvm_mem_allocate_stack(struct tvm_mem *m, size_t size);
 
 // allocate memory and return address
 static inline int32_t tvm_mem_malloc(struct tvm_mem *mem, size_t size) {
