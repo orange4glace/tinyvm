@@ -1,34 +1,118 @@
 mov ebp esp
-
 main:
 push ebp # save base pointer 0
 mov ebp esp
 push 0
-mov (esp) 5
-push 0 # start array size 5
+mov (esp) 15
+push 0 # start array size 15
 push 0
 push 0
 push 0
 push 0
 push 0
-mov (esp) 2342
 push 0
-mov (esp) 4
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push ebp # save base pointer 85
+mov ebp esp
+# for loop initiailzer 48
+push 0
+push 0
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start: # for 48
+push ebp # save base pointer 86
+mov ebp esp
+push 0
+mov (esp) 15
+push 0
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 86
+je loop_end
+push ebp # save base pointer 86
+mov ebp esp
+malloc
+push eax
 mem esi ebp
-add esi 2
-mov ecx esi # get subscript base address
-mov edx -8(ebp)
+add esi 18
+push esi
+mov ecx -2(ebp) # get subscript base address
+mov edx 2(ebp)
 sub ecx edx # add subscript offset
 push ecx # subscript element
-mov esi -9(ebp)
-mov [esi] -7(ebp)
+mov -3{ebp} -1(ebp)
 push 0
-mov (esp) 4
+mov (esp) 3
+push 0
+mov -5(ebp) 2(ebp)
+mul -5(ebp) -4(ebp)
 mem esi ebp
-add esi 2
-mov ecx esi # get subscript base address
-mov edx -10(ebp)
+add esi 18
+push esi
+mov ecx -6(ebp) # get subscript base address
+mov edx 2(ebp)
 sub ecx edx # add subscript offset
 push ecx # subscript element
-mov esi -11(ebp)
-prn [esi]
+push -7{ebp}
+mov -8{ebp} -5(ebp)
+push 0
+mov -9(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 36
+pop ebp # restore base pointer 86
+jmp loop_start
+loop_end: # end of for 48
+add esp 8
+pop ebp # restore base pointer 85
+push ebp # save base pointer 85
+mov ebp esp
+# for loop initiailzer 82
+push 0
+push 0
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start2: # for 82
+push ebp # save base pointer 89
+mov ebp esp
+push 0
+mov (esp) 15
+push 0
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 89
+je loop_end2
+push ebp # save base pointer 89
+mov ebp esp
+push 0
+mem esi ebp
+add esi 18
+push esi
+mov ecx -2(ebp) # get subscript base address
+mov edx 2(ebp)
+sub ecx edx # add subscript offset
+push ecx # subscript element
+mov -1(ebp) -3{ebp}
+push -1(ebp)
+prn -4{ebp}
+push 0
+mov -5(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 20
+pop ebp # restore base pointer 89
+jmp loop_start2
+loop_end2: # end of for 82
+add esp 8
+pop ebp # restore base pointer 85
+
+prn [5]

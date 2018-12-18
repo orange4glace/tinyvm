@@ -27,7 +27,10 @@ void tvm_vm_run(struct tvm_ctx *vm);
   (args[INDEX] + *args[INDEX + 2]) : \
   *args[INDEX + 4] == 1 ? \
   ((int32_t*)(size_t)(*args[INDEX]) + *args[INDEX + 2]) : \
-  &((int *)vm->mem->mem_space)[*args[INDEX]])
+  *args[INDEX + 4] == 2 ? \
+  &((int *)vm->mem->mem_space)[*args[INDEX]] : \
+  &((int *)vm->mem->mem_space)[ \
+    *((int32_t*)(size_t)(*args[INDEX]) + *args[INDEX + 2])])
 
 #define args0 args_rule(0)
 #define args1 args_rule(1)

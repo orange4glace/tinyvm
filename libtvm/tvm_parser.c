@@ -93,7 +93,8 @@ static int **tvm_parse_args(
   // 4 ~ 5 : addressing mode
   // 0 : direct addressing
   // 1 : indirect addressing
-  // 2 : indirect direct memory addressing
+  // 2 : register named memory addressing
+  // 3 : indirect memory addressing
   args[4] = tvm_add_value(vm, 0);
   args[5] = tvm_add_value(vm, 0);
 
@@ -152,6 +153,35 @@ static int **tvm_parse_args(
         // set adressing mode
         args[i] = regp;
         args[i + 4] = tvm_add_value(vm, 1);
+
+        int *index_regp = token_to_register(
+          instr_tokens[*instr_place+1 + i], vm->mem);
+
+        if (index_regp) {
+          args[i + 2] = index_regp;
+          continue;
+        }
+
+        int offset = tvm_parse_value(instr_tokens[*instr_place+1 + i]);
+        args[i + 2] = tvm_add_value(vm, offset);
+        continue;
+      }
+    }
+
+    {
+		  /* Check indirect memory addressing mode */
+      char *start_symbol = strchr(
+        instr_tokens[*instr_place+1 + i], '{');
+      if (start_symbol) {
+        *start_symbol = 0;
+        char *end_symbol = strchr(start_symbol + 1, '}');
+        *end_symbol = 0;
+
+        int *regp = token_to_register_addr(start_symbol + 1, vm->mem);
+
+        // set adressing mode
+        args[i] = regp;
+        args[i + 4] = tvm_add_value(vm, 3);
 
         int *index_regp = token_to_register(
           instr_tokens[*instr_place+1 + i], vm->mem);
