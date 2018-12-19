@@ -74,17 +74,13 @@ void tvm_vm_run(struct tvm_ctx *vm)
   printf("tvm_vm_run\n");
   // create main thread
   struct tvm_thread *main_thread = tvm_thread_create(vm);
-  struct tvm_thread *main_thread2 = tvm_thread_create(vm);
 
   tvm_thread_set_instruction_pointer(main_thread, vm->prog->start);
   tvm_thread_start(vm, main_thread);
 
-  tvm_thread_set_instruction_pointer(main_thread2, vm->prog->start);
-  tvm_thread_start(vm, main_thread2);
-
   int status;
   pthread_join(main_thread->pthread, (void **)&status);
-  pthread_join(main_thread2->pthread, (void **)&status);
+  printf("main thread joined. program exit. \n");
   /*
 	int *instr_idx = &vm->mem->registers[0x8].i32;
 	*instr_idx = vm->prog->start;

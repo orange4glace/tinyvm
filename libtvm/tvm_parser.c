@@ -4,14 +4,15 @@
 #include <tvm/tvm_tokens.h>
 
 const char *tvm_opcode_map[] = {
-	"nop", "int", "mov",
-	"push", "pop", "pushf", "popf",
-	"inc", "dec", "add", "sub", "mul", "div", "mod", "rem",
-	"not", "xor", "or", "and", "shl", "shr",
-	"cmp", "jmp", "call", "ret",
-	"je", "jne", "jg", "jge", "jl", "jle",
-	"prn", "sete", "setne", "setg", "setge", "setl", "setle",
-  "malloc", "mem", "thread", "start", "join", 0
+	"nop", "int", "mov", "push", "pop",
+  "pushf", "popf", "inc", "dec", "add",
+  "sub", "mul", "div", "mod", "rem",
+	"not", "xor", "or", "and", "shl",
+  "shr", "cmp", "jmp", "call", "ret",
+	"je", "jne", "jg", "jge", "jl",
+  "jle", "prn", "sete", "setne", "setg",
+  "setge", "setl", "setle", "malloc", "mem",
+  "thread", "run", "join", "pusht", 0
 };
 
 const char *tvm_register_map[] = {

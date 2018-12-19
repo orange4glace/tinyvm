@@ -7,7 +7,6 @@ int main(int argc, char **argv)
 {
 	struct tvm_ctx *vm = tvm_vm_create();
 
-  printf("tvm_vm_interpret\n");
 	if (vm != NULL && tvm_vm_interpret(vm, argv[1]) == 0) 
 		tvm_vm_run(vm);
 

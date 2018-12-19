@@ -18,6 +18,8 @@
 struct tvm_ctx {
 	struct tvm_prog *prog;
 	struct tvm_mem *mem;
+  struct tvm_thread *threads[50];
+  size_t thread_size;
 };
 
 struct tvm_ctx *tvm_vm_create();
@@ -120,6 +122,24 @@ static inline void tvm_step(struct tvm_ctx *vm, struct tvm_thread *thread, int *
             tvm_mem_malloc(vm->mem, 1); break;
 /* mem */	  case 0x27:
 				*args0 = (*args1 - (int32_t)(vm->mem->mem_space)) / 4;
+        break;
+/* thread */case 0x28:
+        struct tvm_thread *new_thread = tvm_thread_create(vm);
+        new_thread->registers[0x0].i32 /* eax */ = vm->thread_size;
+        vm->threads[vm->thread_size++] = new_thread;
+        break;
+/* run */   case 0x29:
+        struct tvm_thread *run_thread = vm->threads[*args0];
+        tvm_thread_set_instruction_pointer(run_thread, *(args0 + 1));
+        tvm_thread_start(vm, run_thread);
+        break;
+/* join */  case 0x2A:
+        struct tvm_thread *join_thread = vm->threads[*args0];
+        tvm_thread_join(vm, join_thread);
+        break;
+/* pusht */ case 0x2B:
+        struct tvm_thread *target_thread = vm->threads[*args0];
+        tvm_stack_push(target_thread, args1);
         break;
 	};
 }
