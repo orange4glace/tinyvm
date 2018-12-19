@@ -125,12 +125,13 @@ static inline void tvm_step(struct tvm_ctx *vm, struct tvm_thread *thread, int *
         break;
 /* thread */case 0x28:
         struct tvm_thread *new_thread = tvm_thread_create(vm);
-        new_thread->registers[0x0].i32 /* eax */ = vm->thread_size;
+        thread->registers[0x0].i32 /* eax */ = vm->thread_size;
         vm->threads[vm->thread_size++] = new_thread;
         break;
 /* run */   case 0x29:
         struct tvm_thread *run_thread = vm->threads[*args0];
-        tvm_thread_set_instruction_pointer(run_thread, *(args0 + 1));
+        tvm_thread_set_instruction_pointer(run_thread, *(args0 - 1));
+        printf("run %d %d %p %p\n", *args0, *(args0 - 1), (void*)args0, (void*)(args0 - 1));
         tvm_thread_start(vm, run_thread);
         break;
 /* join */  case 0x2A:

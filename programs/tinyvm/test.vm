@@ -1,31 +1,281 @@
-async_start:
-push ebp # save base pointer 48
+sum:
+push ebp # save base pointer 30
 mov ebp esp
 push 0 #  INTEGER
-mov (esp) 391
+mov (esp) 0
+push 0 #  INTEGER
+cmp 2(ebp) -1(ebp)
+sete -2(ebp)
+cmp -2(ebp) 0 # if 16
+je else_start16
+push ebp # save base pointer 30
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 0
+mov 6(ebp) -1(ebp) # set return value
+add esp 4
+pop ebp # restore base pointer 30
+add esp 8
+pop ebp
+ret
+add esp 4
+pop ebp # restore base pointer 30
+jmp if_end16
+else_start16:
+push ebp # save base pointer 30
+mov ebp esp
+add esp 0
+pop ebp # restore base pointer 30
+if_end16: # end of if 16
+push 0 #  INTEGER
+mov (esp) 1
+push 0 #  INTEGER
+mov -4(ebp) 2(ebp)
+sub -4(ebp) -3(ebp)
+push 0 #  INTEGER
+push -4(ebp)
+call sum
+push 0 #  INTEGER
+mov -7(ebp) 2(ebp)
+add -7(ebp) -5(ebp)
+mov 3(ebp) -7(ebp) # set return value
+add esp 28
+pop ebp
+ret
+add esp 28
+pop ebp # restore base pointer 0
+async_start102:
+push ebp # save base pointer 178
+mov ebp esp
+push 0 #  INTEGER
 push 1(ebp)
-mov -2{ebp} -1(ebp)
-push 1(ebp)
-prn -3{ebp}
+call sum
+mov ecx 2(ebp) # get subscript base address
+mov edx 1(ebp)
+mul edx 1
+sub ecx edx # add subscript offset
+push ecx # subscript element
+mov -3{ebp} -1(ebp)
 jmp __end
 start:
-push ebp # save base pointer 47
+push ebp # save base pointer 174
 mov ebp esp
-push 0 #  POINTER
-malloc
-push eax # Pointer created by _new_
-mov -1(ebp) -2(ebp)
-push 0 #  ASYNC
+push 0 #  INTEGER
+mov (esp) 15
+# start array size 15
 push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0 #  POINTER
+push 0 #  POINTER
+mem esi ebp
+add esi -2
+push esi
+mov -18(ebp) -19(ebp) # array -> pointer
+mov -17(ebp) -18(ebp)
+push 0 #  INTEGER
+mov (esp) 10
+# start array size 10
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push 0
+push ebp # save base pointer 174
+mov ebp esp
+# for loop initiailzer 105
+push 0 #  INTEGER
+push 0 #  INTEGER
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start105: # for 105
+push ebp # save base pointer 175
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 10
+push 0 #  INTEGER
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 175
+je loop_end105
+push ebp # save base pointer 175
+mov ebp esp
 push 0 #  ASYNC
 push 0
 thread
-mov -5(ebp) eax
-pusht -5(ebp) -1(ebp)
-mov -6(ebp) 0
-mov -3(ebp) -5(ebp)
-run -3(ebp) # run thread
-join -3(ebp) # join thread
-push -1(ebp)
-prn -7{ebp}
+mov -1(ebp) eax
+pusht -1(ebp) 27(ebp)
+pusht -1(ebp) 2(ebp)
+mov -2(ebp) 43
+mem esi ebp
+add esi 23
+push esi
+mov ecx -3(ebp) # get subscript base address
+mov edx 2(ebp)
+mul edx 2
+sub ecx edx # add subscript offset
+push ecx # subscript element
+# async assignment
+mov -4{ebp} -1(ebp)
+mov esi -4(ebp)
+add esi -1
+push esi
+mov -5{ebp} -2(ebp)
+push 0 #  INTEGER
+mov -6(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 24
+pop ebp # restore base pointer 175
+jmp loop_start105
+loop_end105: # end of for 105
+add esp 8
+pop ebp # restore base pointer 174
+push ebp # save base pointer 174
+mov ebp esp
+# for loop initiailzer 127
+push 0 #  INTEGER
+push 0 #  INTEGER
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start127: # for 127
+push ebp # save base pointer 179
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 10
+push 0 #  INTEGER
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 179
+je loop_end127
+push ebp # save base pointer 179
+mov ebp esp
+mem esi ebp
+add esi 23
+push esi
+mov ecx -1(ebp) # get subscript base address
+mov edx 2(ebp)
+mul edx 2
+sub ecx edx # add subscript offset
+push ecx # subscript element
+run -2{ebp} # run thread
+push 0 #  INTEGER
+mov -3(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 12
+pop ebp # restore base pointer 179
+jmp loop_start127
+loop_end127: # end of for 127
+add esp 8
+pop ebp # restore base pointer 174
+push ebp # save base pointer 174
+mov ebp esp
+# for loop initiailzer 149
+push 0 #  INTEGER
+push 0 #  INTEGER
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start149: # for 149
+push ebp # save base pointer 182
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 10
+push 0 #  INTEGER
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 182
+je loop_end149
+push ebp # save base pointer 182
+mov ebp esp
+mem esi ebp
+add esi 23
+push esi
+mov ecx -1(ebp) # get subscript base address
+mov edx 2(ebp)
+mul edx 2
+sub ecx edx # add subscript offset
+push ecx # subscript element
+join -2{ebp} # join thread
+push 0 #  INTEGER
+mov -3(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 12
+pop ebp # restore base pointer 182
+jmp loop_start149
+loop_end149: # end of for 149
+add esp 8
+pop ebp # restore base pointer 174
+push ebp # save base pointer 174
+mov ebp esp
+# for loop initiailzer 171
+push 0 #  INTEGER
+push 0 #  INTEGER
+mov (esp) 0
+mov -1(ebp) -2(ebp)
+loop_start171: # for 171
+push ebp # save base pointer 185
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 10
+push 0 #  INTEGER
+cmp 2(ebp) -1(ebp)
+setl -2(ebp)
+cmp -2(ebp) 0
+add esp 8
+pop ebp # restore base pointer 185
+je loop_end171
+push ebp # save base pointer 185
+mov ebp esp
+mem esi ebp
+add esi 42
+push esi
+mov ecx -1(ebp) # get subscript base address
+mov edx 2(ebp)
+mul edx 1
+sub ecx edx # add subscript offset
+push ecx # subscript element
+prn -2{ebp}
+push 0 #  INTEGER
+mov -3(ebp) 2(ebp)
+add 2(ebp) 1
+add esp 12
+pop ebp # restore base pointer 185
+jmp loop_start171
+loop_end171: # end of for 171
+add esp 8
+pop ebp # restore base pointer 174
+add esp 160
+pop ebp # restore base pointer 0
 __end:

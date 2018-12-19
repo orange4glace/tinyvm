@@ -9,6 +9,7 @@ struct tvm_ctx;
 
 struct tvm_thread {
   
+  int id;
   struct tvm_ctx *vm;
   pthread_t pthread;
 

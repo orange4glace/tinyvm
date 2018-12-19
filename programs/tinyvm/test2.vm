@@ -1,0 +1,30 @@
+sum:
+prn 33333
+prn esp
+push ebp # save base pointer 23
+prn 77777
+prn esp
+mov ebp esp
+prn 2222222
+prn esp
+push 0 #  INTEGER
+mov -1(ebp) 2(ebp)
+add -1(ebp) 3(ebp)
+mov 4(ebp) -1(ebp) # set return value
+add esp 4
+pop ebp
+ret
+start:
+push ebp # save base pointer 36
+mov ebp esp
+push 0 #  INTEGER
+mov (esp) 10
+push 0 #  INTEGER
+mov (esp) 21
+push 0 #  INTEGER
+push -1(ebp)
+push -2(ebp)
+prn 11111
+prn esp
+call sum
+prn -3(ebp)

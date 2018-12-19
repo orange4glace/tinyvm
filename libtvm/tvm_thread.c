@@ -7,11 +7,14 @@
 
 #define NUM_REGISTERS 17
 
+int next_tvm_thread_id = 0;
+
 struct tvm_thread *tvm_thread_create(struct tvm_ctx *vm)
 {
 	struct tvm_thread *thread =
 		(struct tvm_thread *)calloc(1, sizeof(struct tvm_thread));
 
+  thread->id = next_tvm_thread_id++;
   thread->vm = vm;
 	thread->registers = calloc(NUM_REGISTERS, sizeof(union tvm_reg_u));
 
@@ -39,6 +42,7 @@ void tvm_thread_join(struct tvm_ctx* vm, struct tvm_thread *thread) {
   printf("tvm_thread_join\n");
   int status;
   pthread_join(thread->pthread, (void **)&status);
+  printf("tvm_thread_joined\n");
 }
 
 void tvm_thread_set_instruction_pointer(struct tvm_thread *thread, int ip) {
